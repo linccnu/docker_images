@@ -38,7 +38,7 @@ Step 1. Install [Docker](https://docs.docker.com/engine/install/).
 
 Step 2. xxx (TODO)
 
-Step 3. Build Docker image using the following command. More details you can refer to the [wiki](https://gitee.com/echo_lin/modelzoo/wikis/ModelArts%E8%87%AA%E5%AE%9A%E4%B9%89NPU%E8%AE%AD%E7%BB%83%E7%8E%AF%E5%A2%83%E9%95%9C%E5%83%8F%E6%89%8B%E5%86%8C%E3%80%90%E5%9F%BA%E7%A1%80%E7%89%88%E3%80%91?sort_id=3541942#%E5%85%AC%E5%85%B1%E9%95%9C%E5%83%8F%E7%9A%84%E5%88%B6%E4%BD%9C).
+Step 3. Build Docker image using the following command. More details you can refer to the [wiki](https://gitee.com/ascend/modelzoo/wikis/ModelArts%E8%87%AA%E5%AE%9A%E4%B9%89NPU%E8%AE%AD%E7%BB%83%E7%8E%AF%E5%A2%83%E9%95%9C%E5%83%8F%E6%89%8B%E5%86%8C%E3%80%90%E5%9F%BA%E7%A1%80%E7%89%88%E3%80%91?sort_id=3205360).
 
     docker build -f Dockerfile.modelarts -t image_name:tag_name .
 
