@@ -1,0 +1,49 @@
+FROM swr.cn-north-4.myhuaweicloud.com/modelarts-job-dev-image/roma-tensorflow-ascend910-c75-cp37-euleros2.8-aarch64-training:1.15.0-2.0.8
+ENV LANG C.UTF-8
+
+USER root
+
+RUN /bin/bash /usr/local/Ascend/driver/script/uninstall.sh && \
+    echo "===>>>uninstall driver ok."
+RUN /bin/bash /usr/local/Ascend/nnae/latest/script/uninstall.sh && \
+    echo "===>>>uninstall nnae ok."
+RUN bash /usr/local/Ascend/tfplugin/latest/script/uninstall.sh && \
+    echo "===>>>uninstall tfplugin ok."
+
+## Replace pip.conf
+RUN mv /root/.pip/pip.conf /root/.pip/pip.conf~
+COPY conf/pip.conf /root/.pip
+
+## Using pip install some package if you want.
+RUN pip --no-cache-dir install boto3==1.7.29 sklearn progress
+
+## Copy new run packages to image.
+WORKDIR /home/work/package
+COPY A800-9000-npu-driver_20.1.0_euleros2.8-aarch64.run /home/work/package
+COPY Ascend-cann-nnae_20.1.rc1_linux-aarch64.run        /home/work/package
+COPY Ascend-fwk-tfplugin_20.1.rc1_linux-aarch64.run     /home/work/package
+COPY Ascend-cann-toolkit_20.1.rc1_linux-aarch64.run     /home/work/package
+
+## Change all run packages mode 755, so we can execute installation later.
+RUN chmod 755 Ascend-cann-nnae_20.1.rc1_linux-aarch64.run && \
+    chmod 755 Ascend-fwk-tfplugin_20.1.rc1_linux-aarch64.run && \
+    chmod 755 Ascend-cann-toolkit_20.1.rc1_linux-aarch64.run && \
+    chmod 755 A800-9000-npu-driver_20.1.0_euleros2.8-aarch64.run && \
+    echo "===>>>Chmod all *.run file 755 mode."
+
+## Install driver/nnae/tfplugin run packages
+RUN ./A800-9000-npu-driver_20.1.0_euleros2.8-aarch64.run --quiet --docker && \
+    echo "===>>>install driver ok."
+RUN ./Ascend-cann-nnae_20.1.rc1_linux-aarch64.run        --quiet --install && \
+    echo "===>>>install nnae ok."
+RUN ./Ascend-fwk-tfplugin_20.1.rc1_linux-aarch64.run     --quiet --install && \
+    echo "===>>>install tfplugin ok."
+
+## remove all *.run packages
+RUN rm -rf A800-9000-npu-driver_20.1.0_euleros2.8-aarch64.run && \
+    rm -rf Ascend-cann-nnae_20.1.rc1_linux-aarch64.run        && \
+    rm -rf Ascend-fwk-tfplugin_20.1.rc1_linux-aarch64.run     && \
+    rm -rf Ascend-cann-toolkit_20.1.rc1_linux-aarch64.run     && \
+    echo "===>>>remove all *.run packages ok."
+
+WORKDIR /home/work

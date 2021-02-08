@@ -1,0 +1,13 @@
+## FROM SWR_URL, 这个SWR_URL是公共镜像地址
+FROM swr.cn-north-4.myhuaweicloud.com/ascend-modelzoo/roma-tensorflow-ascend910-c75-cp37-euleros2.8-aarch64-training:1.15.0-2.0.8_base
+ENV LANG C.UTF-8
+
+USER root
+
+WORKDIR /usr/local/Ascend/nnae/latest/fwkacllib/python/site-packages/te/lang/cce/te_compute
+
+COPY conv3d_backprop_filter_compute.py .
+RUN chmod 550 conv3d_backprop_filter_compute.py && \
+    chown HwHiAiUser:HwHiAiUser conv3d_backprop_filter_compute.py
+
+WORKDIR /home/work
